@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.6.4.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="Scripts/raphael.js"></script>
+</head>
+<body>
+    <script>
+        $(document).ready(function () {
+
+
+            var draw = $.connection.drawHub;
+
+
+            draw.client.changePosition = function (point) {
+                p.attr({ cx: point.x, cy: point.y});
+            };
+
+            draw.client.setDeltaPosition = function (point) {
+                p.attr({ cx: p.ox +  point.x, cy: p.oy + point.y });
+            };
+
+
+
+            var R = Raphael(0, 0, "100%", "100%");
+            p = R.circle(430, 100, 50).attr({ fill: "hsb(.8, 1, 1)", stroke: "none", opacity: .5 });
+            var start = function () {
+                this.ox = this.attr("cx");
+                this.oy = this.attr("cy");
+            //    this.animate({ r: 70, opacity: .25 }, 500, ">");
+            },
+            move = function (dx, dy) {
+                this.attr({ cx: this.ox + dx, cy: this.oy + dy });
+                draw.server.setPosition({ x: this.ox + dx, y: this.oy + dy });
+            },
+            up = function () {
+              //  this.animate({ r: 50, opacity: .5 }, 500, ">");
+            };
+
+            R.set(p).drag(move, start, up);
+
+            $.connection.hub.start().done(function () {
+               console.log('start');
+            });
+        });
+    </script>
+</body>
+</html>

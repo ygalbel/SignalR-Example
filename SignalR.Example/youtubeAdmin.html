@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="/signalr/hubs"></script>
+</head>
+<body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <button id="play">Play</button>
+    <button id="stop">Stop</button>
+
+    <script>
+        $(document).ready(function () {
+            var youtube = $.connection.youtubeHub;
+
+        
+            $.connection.hub.start().done(function () {
+                console.log('start');
+            });
+
+            $("#play").click(function () {
+                youtube.server.play();
+            })
+
+            $("#stop").click(function () {
+                youtube.server.stop();
+            })
+
+        });
+    </script>
+</body>
+</html>
